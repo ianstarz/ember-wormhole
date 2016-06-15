@@ -87,3 +87,14 @@
   {{/current-user}}
   {{!-- END-SNIPPET --}}
 </div>
+
+<div class='example' id='example-error-handling'>
+  <h2>Error Handling Example</h2>
+  {{code-snippet name='error-handling.hbs'}}
+  {{!-- BEGIN-SNIPPET error-handling --}}
+  <button {{action 'toggleErrorCase'}}>Toggle Error Case</button>
+  {{#if isShowingErrorCase}}
+    {{#ember-wormhole to=errorCaseId onError=(action 'handleError')}}{{/ember-wormhole}}
+  {{/if}}
+  {{!-- END-SNIPPET --}}
+</div>

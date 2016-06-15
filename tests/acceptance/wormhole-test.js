@@ -194,6 +194,29 @@ test('throws if destination element id falsy', function(assert) {
   });
 });
 
+test('executes a closure action if provided to handle destination element not in DOM error case', function(assert) {
+  visit('/');
+  andThen(function() {
+    var controller = application.__container__.lookup('controller:application');
+    $(`#${controller.get('errorCaseId')}`).remove();
+    controller.actions = controller.actions || {};
+    controller.actions.handleError = function(err) {
+      console.log('handled!');
+      throw new Error('huzzah custom error!!!');
+    };
+  });
+  var wormholeToTargetThatDoesntExist = function() {
+    $('button:contains(Toggle Error Case)').click();
+  };
+  andThen(function() {
+    assert.throws(
+      wormholeToTargetThatDoesntExist,
+      /huzzah custom error!!!/,
+      'closure action handled error'
+    );
+  });
+});
+
 test('preserves focus', function (assert) {
   var sidebarWormhole;
   var focused;

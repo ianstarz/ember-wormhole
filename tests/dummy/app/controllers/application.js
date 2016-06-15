@@ -8,6 +8,8 @@ export default Ember.Controller.extend({
   sidebarId: 'sidebar',
   isInPlace: false,
   isTestingDocumentTitle: false,
+  errorCaseId: 'target-that-doesnt-exist',
+  isShowingErrorCase: false,
   favicon: "http://emberjs.com/images/favicon.png",
   actions: {
     toggleModal() {
@@ -25,6 +27,9 @@ export default Ember.Controller.extend({
     },
     toggleTitle() {
       this.toggleProperty('isTestingDocumentTitle');
+    },
+    toggleErrorCase() {
+      this.toggleProperty('isShowingErrorCase');
     }
   }
 });

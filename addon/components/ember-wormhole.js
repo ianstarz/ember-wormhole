@@ -27,6 +27,7 @@ export default Component.extend({
     return findElementById(this._dom.document, id);
   }),
   renderInPlace: false,
+  onError: null,
 
   /*
    * Lifecycle
@@ -84,13 +85,26 @@ export default Component.extend({
   }),
 
   _appendToDestination() {
+    return this.send('handleError', 'foo');
+
+    var error;
+
     var destinationElement = this.get('destinationElement');
     if (!destinationElement) {
       var destinationElementId = this.get('destinationElementId');
       if (destinationElementId) {
-        throw new Error(`ember-wormhole failed to render into '#${this.get('destinationElementId')}' because the element is not in the DOM`);
+        error = new Error(`ember-wormhole failed to render into '#${this.get('destinationElementId')}' because the element is not in the DOM`);
+      } else {
+        error = new Error('ember-wormhole failed to render content because the destinationElementId was set to an undefined or falsy value.');
       }
-      throw new Error('ember-wormhole failed to render content because the destinationElementId was set to an undefined or falsy value.');
+    }
+
+    if (error) {
+      if (this.get('onError') && typeof this.get('onError') === 'function') {
+        return this.send('onError');
+      } else {
+        throw error;
+      }
     }
 
     var currentActiveElement = getActiveElement();
